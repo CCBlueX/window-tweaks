@@ -38,8 +38,9 @@ pub fn apply_rounded_corners(hwnd: HWND) -> Result<(), Error> {
     Ok(())
 }
 
-pub fn apply_blur(hwnd: HWND, color: Option<Color>) -> Result<(), Error> {
-    if is_win7() {
+pub fn apply_blur(hwnd: HWND) -> Result<(), Error> {
+    // DwmEnableBlurBehindWindow works fine on Windows 22H2
+    // if is_win7() {
         let bb = DWM_BLURBEHIND {
             dwFlags: DWM_BB_ENABLE,
             fEnable: true.into(),
@@ -49,15 +50,15 @@ pub fn apply_blur(hwnd: HWND, color: Option<Color>) -> Result<(), Error> {
         unsafe {
             let _ = DwmEnableBlurBehindWindow(hwnd, &bb);
         }
-    } else if is_swca_supported() {
-        unsafe {
-            SetWindowCompositionAttribute(hwnd, ACCENT_STATE::ACCENT_ENABLE_BLURBEHIND, color);
-        }
-    } else {
-        return Err(Error::UnsupportedPlatformVersion(
-      "\"apply_blur()\" is only available on Windows 7, Windows 10 v1809 or newer and Windows 11.",
-    ));
-    }
+    // } else if is_swca_supported() {
+    //     unsafe {
+    //         SetWindowCompositionAttribute(hwnd, ACCENT_STATE::ACCENT_ENABLE_BLURBEHIND, color);
+    //     }
+    // } else {
+    //     return Err(Error::UnsupportedPlatformVersion(
+    //   "\"apply_blur()\" is only available on Windows 7, Windows 10 v1809 or newer and Windows 11.",
+    // ));
+    // }
     Ok(())
 }
 

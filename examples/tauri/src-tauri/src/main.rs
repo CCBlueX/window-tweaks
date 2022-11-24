@@ -8,7 +8,7 @@
 )]
 
 use tauri::Manager;
-use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{apply_blur, apply_acrylic, apply_rounded_corners, NSVisualEffectMaterial};
 
 fn main() {
   tauri::Builder::default()
@@ -20,8 +20,11 @@ fn main() {
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
       #[cfg(target_os = "windows")]
-      apply_blur(&window, Some((18, 18, 18, 125)))
+      apply_blur(&window)
         .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+      //apply_rounded_corners(&window)
+      //  .expect("Unsupported platform! 'apply_rounded_corners' is only supported on Windows 11");
 
       Ok(())
     })

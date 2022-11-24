@@ -40,12 +40,11 @@ pub type Color = (u8, u8, u8, u8);
 /// - **Linux / macOS**: Unsupported.
 pub fn apply_blur(
     window: impl raw_window_handle::HasRawWindowHandle,
-    #[allow(unused)] color: Option<Color>,
 ) -> Result<(), Error> {
     match window.raw_window_handle() {
         #[cfg(target_os = "windows")]
         raw_window_handle::RawWindowHandle::Win32(handle) => {
-            windows::apply_blur(handle.hwnd as _, color)
+            windows::apply_blur(handle.hwnd as _)
         }
         _ => Err(Error::UnsupportedPlatform(
             "\"apply_blur()\" is only supported on Windows.",
