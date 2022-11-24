@@ -15,15 +15,26 @@ pub use windows_sys::Win32::{
 
 use crate::{Color, Error};
 
+// https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/apply-rounded-corners
 pub fn apply_rounded_corners(hwnd: HWND) -> Result<(), Error> {
-    unsafe {
-        DwmSetWindowAttribute(
-            hwnd,
-            DWMWA_WINDOW_CORNER_PREFERENCE,
-            &DWMWCP_ROUND as *const _ as _,
-            4,
-        );
+     // supported since Windows Build 22000
+    if is_undocumented_mica_supported() {
+        unsafe {
+            // https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmsetwindowattribute
+            DwmSetWindowAttribute(
+                hwnd,
+                DWMWA_WINDOW_CORNER_PREFERENCE, // https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwm_window_corner_preference
+                &DWMWCP_ROUND as *const _ as _,
+                4,
+            );
+        }
+        
+    } else {
+        return Err(Error::UnsupportedPlatformVersion(
+            "\"apply_rounded_corners()\" is only available on Windows 11.",
+          ));
     }
+
     Ok(())
 }
 

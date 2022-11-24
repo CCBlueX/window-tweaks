@@ -90,6 +90,25 @@ pub fn apply_acrylic(
         #[cfg(target_os = "windows")]
         raw_window_handle::RawWindowHandle::Win32(handle) => {
             windows::apply_acrylic(handle.hwnd as _, color)?;
+            Ok(())
+        }
+        _ => Err(Error::UnsupportedPlatform(
+            "\"apply_acrylic()\" is only supported on Windows.",
+        )),
+    }
+}
+
+/// Applies rounded corners to your window. Works only on Windows 11
+///
+/// ## Platform-specific
+///
+/// - **Linux / macOS**: Unsupported.
+pub fn apply_rounded_corners(
+    window: impl raw_window_handle::HasRawWindowHandle
+) -> Result<(), Error> {
+    match window.raw_window_handle() {
+        #[cfg(target_os = "windows")]
+        raw_window_handle::RawWindowHandle::Win32(handle) => {
             windows::apply_rounded_corners(handle.hwnd as _)?;
             Ok(())
         }
