@@ -89,7 +89,9 @@ pub fn apply_acrylic(
     match window.raw_window_handle() {
         #[cfg(target_os = "windows")]
         raw_window_handle::RawWindowHandle::Win32(handle) => {
-            windows::apply_acrylic(handle.hwnd as _, color)
+            windows::apply_acrylic(handle.hwnd as _, color)?;
+            windows::apply_rounded_corners(handle.hwnd as _)?;
+            Ok(())
         }
         _ => Err(Error::UnsupportedPlatform(
             "\"apply_acrylic()\" is only supported on Windows.",

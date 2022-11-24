@@ -15,6 +15,18 @@ pub use windows_sys::Win32::{
 
 use crate::{Color, Error};
 
+pub fn apply_rounded_corners(hwnd: HWND) -> Result<(), Error> {
+    unsafe {
+        DwmSetWindowAttribute(
+            hwnd,
+            DWMWA_WINDOW_CORNER_PREFERENCE,
+            &DWMWCP_ROUND as *const _ as _,
+            4,
+        );
+    }
+    Ok(())
+}
+
 pub fn apply_blur(hwnd: HWND, color: Option<Color>) -> Result<(), Error> {
     if is_win7() {
         let bb = DWM_BLURBEHIND {
